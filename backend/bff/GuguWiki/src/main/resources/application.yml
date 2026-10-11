@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: GuguWiki
+  config:
+    import: optional:file:./.env[.properties],optional:file:../../../.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:127.0.0.1}:${POSTGRES_PORT:15432}/${POSTGRES_DB:guguwiki}
+    username: ${POSTGRES_USER:guguwiki}
+    password: ${POSTGRES_PASSWORD}
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:16379}
+      username: ${REDIS_USERNAME:default}
+      password: ${REDIS_PASSWORD}
+
+mybatis:
+  type-handlers-package: com.tr1kz7.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
