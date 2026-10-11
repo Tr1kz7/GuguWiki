@@ -1,0 +1,995 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GuguWiki 接口文档</title><style>:root{font-family:Inter,"Microsoft YaHei",system-ui,sans-serif;color:#1e293b;background:#f7f9fc}*{box-sizing:border-box}body{margin:0}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid #dce4ef;background:#fff;padding:22px 14px}.brand{display:flex;gap:10px;align-items:center;padding:5px 9px 22px;color:#1d4ed8;font-weight:800}.brand i{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#e8efff;font-style:normal}.nav-group{display:grid;gap:3px;margin:7px 0 16px}.nav-group-title{font-weight:750;color:#334155;padding:10px 9px}.nav-item{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;padding:7px 9px;border-radius:7px;color:#64748b}.nav-item:hover,.nav-item:focus{background:#edf3ff;color:#1d4ed8}.nav-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}a{text-decoration:none;color:inherit}.method{font-family:ui-monospace,monospace;font-weight:800;font-size:10px;border-radius:5px;padding:4px 6px;background:#dbeafe;color:#1d4ed8}.method.post{background:#def7ec;color:#047857}.method.put,.method.patch{background:#fef3c7;color:#a16207}.method.delete{background:#fee2e2;color:#b91c1c}main{min-width:0;max-width:1250px;padding:35px 42px 100px}.intro{padding:8px 0 30px}.intro h1{font-size:29px;color:#172554}.intro p{color:#64748b}.intro .notice{padding:12px 15px;background:#eff6ff;border-left:3px solid #3b82f6;border-radius:5px}.group{scroll-margin-top:15px;margin:30px 0 14px;padding-top:18px;border-top:1px solid #e2e8f0}.group h2{color:#1e40af}.group p{color:#64748b}.operation{scroll-margin-top:18px;background:white;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 3px 14px #233b5f0a;padding:25px 30px;margin:17px 0;overflow-x:auto}.op-heading{display:flex;gap:12px;align-items:center}.op-heading .method{font-size:12px;padding:6px 9px}.op-heading small{color:#94a3b8}.op-heading h3{margin:3px 0 0;font-size:20px;color:#172554}h4{font-size:15px;color:#1d4ed8;margin:27px 0 12px}table{border-collapse:collapse;width:100%;font-size:12px;margin:12px 0 18px;table-layout:auto}th,td{border:1px solid #dce4ef;padding:9px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#f1f5f9;color:#334155}td:first-child{font-family:ui-monospace,monospace;color:#334155}.sample-label{font-weight:700;font-size:12px;color:#475569}pre{background:#f3f5f8;border:1px solid #e2e8f0;border-radius:8px;padding:17px;overflow:auto;font-size:12px;line-height:1.55;color:#334155}.errors{font-size:12px;color:#64748b}.schema,.rule{scroll-margin-top:20px;background:white;border:1px solid #e2e8f0;border-radius:10px;padding:20px 25px;margin:14px 0}.schema h3,.rule h3{color:#1d4ed8}.rule p{line-height:1.8;color:#475569}@media(max-width:900px){main{padding:20px 18px 70px}.operation{padding:18px 14px}table{font-size:11px}}@media(max-width:650px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto;max-height:240px;border-right:0;border-bottom:1px solid #e2e8f0}.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}}</style></head><body><div class="layout"><aside class="sidebar"><a class="brand" href="#top"><i>g</i>GuguWiki · 接口文档</a><nav><div class="nav-group"><a class="nav-group-title" href="#group-1">1. 认证</a><a class="nav-item" href="#op-1-1"><span>1.1 登录</span><b class="method post">POST</b></a><a class="nav-item" href="#op-1-2"><span>1.2 恢复登录</span><b class="method get">GET</b></a><a class="nav-item" href="#op-1-3"><span>1.3 退出登录</span><b class="method post">POST</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-2">2. 用户与授权管理</a><a class="nav-item" href="#op-2-1"><span>2.1 创建用户</span><b class="method post">POST</b></a><a class="nav-item" href="#op-2-2"><span>2.2 列出用户</span><b class="method get">GET</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-3">3. Wiki 与搜索</a><a class="nav-item" href="#op-3-1"><span>3.1 列出知识库</span><b class="method get">GET</b></a><a class="nav-item" href="#op-3-2"><span>3.2 列出目录</span><b class="method get">GET</b></a><a class="nav-item" href="#op-3-3"><span>3.3 列出文档</span><b class="method get">GET</b></a><a class="nav-item" href="#op-3-4"><span>3.4 读取文档正文</span><b class="method get">GET</b></a><a class="nav-item" href="#op-3-5"><span>3.5 下载 PDF 原件</span><b class="method get">GET</b></a><a class="nav-item" href="#op-3-6"><span>3.6 关键词搜索</span><b class="method get">GET</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-4">4. 内容与版本管理</a><a class="nav-item" href="#op-4-1"><span>4.1 新建知识库</span><b class="method post">POST</b></a><a class="nav-item" href="#op-4-2"><span>4.2 新建目录</span><b class="method post">POST</b></a><a class="nav-item" href="#op-4-3"><span>4.3 新建 Markdown 草稿</span><b class="method post">POST</b></a><a class="nav-item" href="#op-4-4"><span>4.4 保存草稿</span><b class="method put">PUT</b></a><a class="nav-item" href="#op-4-5"><span>4.5 导入 Markdown 或 PDF</span><b class="method post">POST</b></a><a class="nav-item" href="#op-4-6"><span>4.6 查看导入任务</span><b class="method get">GET</b></a><a class="nav-item" href="#op-4-7"><span>4.7 开始发布</span><b class="method post">POST</b></a><a class="nav-item" href="#op-4-8"><span>4.8 查看发布任务</span><b class="method get">GET</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-5">5. 会话与问答</a><a class="nav-item" href="#op-5-1"><span>5.1 列出我的会话</span><b class="method get">GET</b></a><a class="nav-item" href="#op-5-2"><span>5.2 新建会话</span><b class="method post">POST</b></a><a class="nav-item" href="#op-5-3"><span>5.3 读取会话详情</span><b class="method get">GET</b></a><a class="nav-item" href="#op-5-4"><span>5.4 重命名会话</span><b class="method patch">PATCH</b></a><a class="nav-item" href="#op-5-5"><span>5.5 删除会话</span><b class="method delete">DELETE</b></a><a class="nav-item" href="#op-5-6"><span>5.6 提交问题并创建运行</span><b class="method post">POST</b></a><a class="nav-item" href="#op-5-7"><span>5.7 订阅回答事件</span><b class="method get">GET</b></a><a class="nav-item" href="#op-5-8"><span>5.8 查看运行状态</span><b class="method get">GET</b></a><a class="nav-item" href="#op-5-9"><span>5.9 请求取消</span><b class="method post">POST</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-6">6. 检索实验室</a><a class="nav-item" href="#op-6-1"><span>6.1 读取正式策略</span><b class="method get">GET</b></a><a class="nav-item" href="#op-6-2"><span>6.2 单次 Query 调试</span><b class="method post">POST</b></a><a class="nav-item" href="#op-6-3"><span>6.3 列出标注数据集</span><b class="method get">GET</b></a><a class="nav-item" href="#op-6-4"><span>6.4 冻结实验快照</span><b class="method post">POST</b></a><a class="nav-item" href="#op-6-5"><span>6.5 运行离线评测</span><b class="method post">POST</b></a><a class="nav-item" href="#op-6-6"><span>6.6 列出已保存评测</span><b class="method get">GET</b></a><a class="nav-item" href="#op-6-7"><span>6.7 手动启用评测策略</span><b class="method post">POST</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-7">7. 内部 Java → Python</a><a class="nav-item" href="#op-7-1"><span>7.1 提取 PDF 文本</span><b class="method post">POST</b></a><a class="nav-item" href="#op-7-2"><span>7.2 生成索引切片</span><b class="method post">POST</b></a><a class="nav-item" href="#op-7-3"><span>7.3 发起检索生成</span><b class="method post">POST</b></a><a class="nav-item" href="#op-7-4"><span>7.4 通知协作取消</span><b class="method post">POST</b></a></div><div class="nav-group"><a class="nav-group-title" href="#group-8">8. 内部 Python → Java</a><a class="nav-item" href="#op-8-1"><span>8.1 授权 FTS 候选检索</span><b class="method post">POST</b></a><a class="nav-item" href="#op-8-2"><span>8.2 授权向量候选检索</span><b class="method post">POST</b></a></div><div class="nav-group"><a class="nav-group-title" href="#schemas">通用数据结构</a><a class="nav-group-title" href="#rules">HTTP 状态码与业务规则</a></div></nav></aside><main id="top"><section class="intro"><h1>GuguWiki 接口文档</h1><p>按实现依赖和页面操作查看接口。前六组是 React → Java；后两组是 Java ↔ Python 内部接口。</p><p class="notice">当前 Java 仅实现认证链路；创建用户与其他业务接口是待实现契约。</p><h2>建议实现顺序</h2><ol><li>准备 BCrypt 密码能力；本地开发需要首个管理员时，显式运行 AdminSeedTest。</li><li>登录查询 password_hash，用 BCrypt.verify 校验，成功后生成 Redis Token。</li><li>恢复拦截器读取 Token、核验账号并续期；登录拦截器仅保护业务 API，处理结束清理 ThreadLocal。</li><li>后续业务接口按需实现；创建用户目前仅是接口契约。</li></ol><p>JSON 成功为 HTTP 200 / code 200；失败状态与 code 相同；HTTP 204 没有 Result 响应体。</p></section><section class="rule"><h3>本地开发管理员测试数据</h3><p>仅显式设置 GUGUWIKI_SEED_ADMIN=true、GUGUWIKI_SEED_ADMIN_EMAIL、GUGUWIKI_SEED_ADMIN_PASSWORD 后单独运行 AdminSeedTest，才会在尚无 ADMIN 的本地数据库中创建管理员。应用启动和普通测试不会自动创建账号。</p></section><section class="group" id="group-1"><h2>1. 认证</h2><p>登录接口公开，其余需有效的 Authorization Token</p></section><article class="operation" id="op-1-1"><div class="op-heading"><span class="method post">POST</span><div><small>1.1 认证</small><h3>登录</h3></div></div><h4>1.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/auth/login</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>公开</td></tr><tr><td>接口描述</td><td>按邮箱读取账号及 password_hash，用 BCrypt 验证明文密码；账号启用且入口角色合法后，生成随机 Token，Redis 存 userId 并设置 30 分钟滑动过期。</td></tr></tbody></table><h4>1.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>Body</td><td>password</td><td>string</td><td>是</td><td>用户输入的明文密码，仅用于本次校验</td></tr><tr><td>Body</td><td>entry</td><td>READER | ADMIN</td><td>是</td><td>请求进入的页面类型；不授予角色</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+  &quot;password&quot;: &quot;&lt;用户密码&gt;&quot;,
+  &quot;entry&quot;: &quot;READER&quot;
+}</code></pre><h4>1.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: UserDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>UserDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>token</td><td>string</td><td>是</td><td>随机登录凭证；仅登录成功响应返回，前端后续放在 Authorization 请求头</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>用户 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>data.email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>data.role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;user-reader&quot;,
+    &quot;name&quot;: &quot;林同学&quot;,
+    &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+    &quot;role&quot;: &quot;READER&quot;
+  },
+  &quot;message&quot;: &quot;欢迎登录，林同学！&quot;,
+  &quot;token&quot;: &quot;&lt;随机登录 Token&gt;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-1-2"><div class="op-heading"><span class="method get">GET</span><div><small>1.2 认证</small><h3>恢复登录</h3></div></div><h4>1.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/auth/me</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token</td></tr><tr><td>接口描述</td><td>前端刷新后携带 Token，Redis 恢复登录用户并延长有效期。</td></tr></tbody></table><h4>1.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/auth/me HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>1.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: UserDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>UserDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>用户 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>data.email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>data.role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;user-reader&quot;,
+    &quot;name&quot;: &quot;林同学&quot;,
+    &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+    &quot;role&quot;: &quot;READER&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><article class="operation" id="op-1-3"><div class="op-heading"><span class="method post">POST</span><div><small>1.3 认证</small><h3>退出登录</h3></div></div><h4>1.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/auth/logout</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>需登录 Token</td></tr><tr><td>接口描述</td><td>删除当前 Redis Token，令其立即失效。</td></tr></tbody></table><h4>1.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/auth/logout HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>1.3.3 响应数据</h4><p><strong>204 No Content</strong> · 无 · 无响应体</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>无响应体</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 204 No Content</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><section class="group" id="group-2"><h2>2. 用户与授权管理</h2><p>管理员 Token；Java 校验 ADMIN 角色</p></section><article class="operation" id="op-2-1"><div class="op-heading"><span class="method post">POST</span><div><small>2.1 用户与授权管理</small><h3>创建用户</h3></div></div><h4>2.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/users</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>管理员创建账号：Java 对至少 8 位的 initialPassword 使用与登录验证配套的 BCrypt 哈希后写入 users.password_hash；响应绝不返回密码或哈希。</td></tr></tbody></table><h4>2.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>Body</td><td>email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>Body</td><td>role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr><tr><td>Body</td><td>initialPassword</td><td>string</td><td>是</td><td>至少 8 位的初始密码</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/users HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;name&quot;: &quot;林同学&quot;,
+  &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+  &quot;role&quot;: &quot;READER&quot;,
+  &quot;initialPassword&quot;: &quot;&lt;设置强密码&gt;&quot;
+}</code></pre><h4>2.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: UserDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>UserDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>用户 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>data.email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>data.role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;user-reader&quot;,
+    &quot;name&quot;: &quot;林同学&quot;,
+    &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+    &quot;role&quot;: &quot;READER&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）、HTTP 409 = Result.code 409（状态冲突）</p></article><article class="operation" id="op-2-2"><div class="op-heading"><span class="method get">GET</span><div><small>2.2 用户与授权管理</small><h3>列出用户</h3></div></div><h4>2.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/users</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>查看用户及其读者/管理员角色。</td></tr></tbody></table><h4>2.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/admin/users HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>2.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: UserDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>UserDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>用户 ID</td></tr><tr><td>data[].name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>data[].email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>data[].role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;user-reader&quot;,
+      &quot;name&quot;: &quot;林同学&quot;,
+      &quot;email&quot;: &quot;reader@guguwiki.dev&quot;,
+      &quot;role&quot;: &quot;READER&quot;
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）</p></article><section class="group" id="group-3"><h2>3. Wiki 与搜索</h2><p>需登录 Token；读者查看已发布文档，管理员可查看草稿</p></section><article class="operation" id="op-3-1"><div class="op-heading"><span class="method get">GET</span><div><small>3.1 Wiki 与搜索</small><h3>列出知识库</h3></div></div><h4>3.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/knowledge-bases</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>返回全部知识库；不按用户分组或知识库单独授权。读者可查看其中已发布的文档，管理员可查看草稿。</td></tr></tbody></table><h4>3.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/knowledge-bases HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: KnowledgeBaseDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>KnowledgeBaseDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>知识库 ID</td></tr><tr><td>data[].name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>data[].description</td><td>string</td><td>是</td><td>说明</td></tr><tr><td>data[].icon</td><td>string</td><td>是</td><td>前端显示字符</td></tr><tr><td>data[].documentCount</td><td>number</td><td>是</td><td>文档总数</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;kb-java&quot;,
+      &quot;name&quot;: &quot;Java 工程实践&quot;,
+      &quot;description&quot;: &quot;语言、虚拟机与性能调优&quot;,
+      &quot;icon&quot;: &quot;J&quot;,
+      &quot;documentCount&quot;: 2
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><article class="operation" id="op-3-2"><div class="op-heading"><span class="method get">GET</span><div><small>3.2 Wiki 与搜索</small><h3>列出目录</h3></div></div><h4>3.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/folders</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>读者查看包含已发布后代文档的目录；管理员可查看全部目录。</td></tr></tbody></table><h4>3.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Query</td><td>knowledgeBaseId</td><td>string</td><td>否</td><td>按知识库筛选</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/folders?knowledgeBaseId=kb-java HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: FolderDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>FolderDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>目录 ID</td></tr><tr><td>data[].knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data[].parentId</td><td>string | null</td><td>是</td><td>父目录；null 表示根目录</td></tr><tr><td>data[].title</td><td>string</td><td>是</td><td>目录名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;folder-jvm&quot;,
+      &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+      &quot;parentId&quot;: null,
+      &quot;title&quot;: &quot;虚拟机与性能&quot;
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-3-3"><div class="op-heading"><span class="method get">GET</span><div><small>3.3 Wiki 与搜索</small><h3>列出文档</h3></div></div><h4>3.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/documents</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>读者查看所有已发布文档；管理员还可查看未发布草稿。</td></tr></tbody></table><h4>3.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Query</td><td>knowledgeBaseId</td><td>string</td><td>否</td><td>按知识库筛选</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/documents?knowledgeBaseId=kb-java HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.3.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: DocumentDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>DocumentDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>data[].knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data[].parentId</td><td>string | null</td><td>是</td><td>目录 ID；null 为根目录</td></tr><tr><td>data[].title</td><td>string</td><td>是</td><td>管理员看到草稿标题；读者看到生效版本标题</td></tr><tr><td>data[].kind</td><td>MARKDOWN | PDF</td><td>是</td><td>文件类型</td></tr><tr><td>data[].summary</td><td>string</td><td>是</td><td>摘要</td></tr><tr><td>data[].draftContent</td><td>string</td><td>是</td><td>管理员草稿；读者仅收到生效版本正文</td></tr><tr><td>data[].draftRevision</td><td>number</td><td>是</td><td>乐观锁修订号</td></tr><tr><td>data[].activeVersionId</td><td>string | null</td><td>是</td><td>当前生效版本指针</td></tr><tr><td>data[].versions</td><td>DocumentVersionDto[]</td><td>是</td><td>读者仅见生效版本</td></tr><tr><td>data[].originalFileName</td><td>string</td><td>否</td><td>PDF 原件名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;doc-jvm&quot;,
+      &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+      &quot;parentId&quot;: &quot;folder-jvm&quot;,
+      &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+      &quot;kind&quot;: &quot;MARKDOWN&quot;,
+      &quot;summary&quot;: &quot;JVM 入门说明&quot;,
+      &quot;draftContent&quot;: &quot;&quot;,
+      &quot;draftRevision&quot;: 2,
+      &quot;activeVersionId&quot;: &quot;doc-jvm-v1&quot;,
+      &quot;versions&quot;: [
+        {
+          &quot;id&quot;: &quot;doc-jvm-v1&quot;,
+          &quot;number&quot;: 1,
+          &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+          &quot;content&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+          &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+          &quot;indexedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+        }
+      ]
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-3-4"><div class="op-heading"><span class="method get">GET</span><div><small>3.4 Wiki 与搜索</small><h3>读取文档正文</h3></div></div><h4>3.4.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/documents/{id}</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>读者读取已发布的生效版本；管理员还可读取未发布草稿。</td></tr></tbody></table><h4>3.4.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>文档 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/documents/doc-jvm HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.4.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: DocumentDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>DocumentDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>data.knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data.parentId</td><td>string | null</td><td>是</td><td>目录 ID；null 为根目录</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>管理员看到草稿标题；读者看到生效版本标题</td></tr><tr><td>data.kind</td><td>MARKDOWN | PDF</td><td>是</td><td>文件类型</td></tr><tr><td>data.summary</td><td>string</td><td>是</td><td>摘要</td></tr><tr><td>data.draftContent</td><td>string</td><td>是</td><td>管理员草稿；读者仅收到生效版本正文</td></tr><tr><td>data.draftRevision</td><td>number</td><td>是</td><td>乐观锁修订号</td></tr><tr><td>data.activeVersionId</td><td>string | null</td><td>是</td><td>当前生效版本指针</td></tr><tr><td>data.versions</td><td>DocumentVersionDto[]</td><td>是</td><td>读者仅见生效版本</td></tr><tr><td>data.originalFileName</td><td>string</td><td>否</td><td>PDF 原件名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;doc-jvm&quot;,
+    &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+    &quot;parentId&quot;: &quot;folder-jvm&quot;,
+    &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+    &quot;kind&quot;: &quot;MARKDOWN&quot;,
+    &quot;summary&quot;: &quot;JVM 入门说明&quot;,
+    &quot;draftContent&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+    &quot;draftRevision&quot;: 2,
+    &quot;activeVersionId&quot;: &quot;doc-jvm-v1&quot;,
+    &quot;versions&quot;: [
+      {
+        &quot;id&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;number&quot;: 1,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;content&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+        &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+        &quot;indexedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+      }
+    ]
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-3-5"><div class="op-heading"><span class="method get">GET</span><div><small>3.5 Wiki 与搜索</small><h3>下载 PDF 原件</h3></div></div><h4>3.5.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/documents/{id}/original</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>读者仅可下载已发布 PDF 的原件；管理员还可下载未发布 PDF 的原件。原件通过受控接口返回。</td></tr></tbody></table><h4>3.5.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>PDF 文档 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/documents/doc-pdf/original HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.5.3 响应数据</h4><p><strong>200 OK</strong> · application/pdf · application/pdf</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>body</td><td>binary</td><td>是</td><td>Content-Type: application/pdf；授权后返回原件</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/pdf
+
+&lt;PDF binary stream&gt;</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-3-6"><div class="op-heading"><span class="method get">GET</span><div><small>3.6 Wiki 与搜索</small><h3>关键词搜索</h3></div></div><h4>3.6.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/search</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；读者查看已发布文档，管理员可查看草稿</td></tr><tr><td>接口描述</td><td>在全部已发布文档的 active_version_id 内检索；候选发布状态过滤先于 Top-K。</td></tr></tbody></table><h4>3.6.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Query</td><td>q</td><td>string</td><td>是</td><td>搜索词</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/search?q=JVM HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>3.6.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: SearchHitDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>SearchHitDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].documentId</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>data[].knowledgeBaseId</td><td>string</td><td>是</td><td>知识库 ID</td></tr><tr><td>data[].title</td><td>string</td><td>是</td><td>当前生效版本标题</td></tr><tr><td>data[].excerpt</td><td>string</td><td>是</td><td>命中摘录</td></tr><tr><td>data[].score</td><td>number</td><td>是</td><td>当前搜索策略分数</td></tr><tr><td>data[].citation</td><td>CitationDto</td><td>是</td><td>可打开的引用</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;documentId&quot;: &quot;doc-jvm&quot;,
+      &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+      &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+      &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+      &quot;score&quot;: 0.77,
+      &quot;citation&quot;: {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;anchor&quot;: &quot;content&quot;
+      }
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 503 = Result.code 503（授权依赖不可用）</p></article><section class="group" id="group-4"><h2>4. 内容与版本管理</h2><p>管理员 Token；Java 校验 ADMIN 角色</p></section><article class="operation" id="op-4-1"><div class="op-heading"><span class="method post">POST</span><div><small>4.1 内容与版本管理</small><h3>新建知识库</h3></div></div><h4>4.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/knowledge-bases</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>创建知识空间；所有读者均可访问其中已发布的文档。</td></tr></tbody></table><h4>4.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>name</td><td>string</td><td>是</td><td>知识库名称</td></tr><tr><td>Body</td><td>description</td><td>string</td><td>是</td><td>说明</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/knowledge-bases HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;name&quot;: &quot;Java 工程实践&quot;,
+  &quot;description&quot;: &quot;语言、虚拟机与性能调优&quot;
+}</code></pre><h4>4.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: KnowledgeBaseDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>KnowledgeBaseDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>知识库 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>data.description</td><td>string</td><td>是</td><td>说明</td></tr><tr><td>data.icon</td><td>string</td><td>是</td><td>前端显示字符</td></tr><tr><td>data.documentCount</td><td>number</td><td>是</td><td>文档总数</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;kb-java&quot;,
+    &quot;name&quot;: &quot;Java 工程实践&quot;,
+    &quot;description&quot;: &quot;语言、虚拟机与性能调优&quot;,
+    &quot;icon&quot;: &quot;J&quot;,
+    &quot;documentCount&quot;: 2
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-4-2"><div class="op-heading"><span class="method post">POST</span><div><small>4.2 内容与版本管理</small><h3>新建目录</h3></div></div><h4>4.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/folders</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>在知识库或上级目录下创建目录；目录不单独授权。</td></tr></tbody></table><h4>4.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>Body</td><td>parentId</td><td>string | null</td><td>是</td><td>上级目录；null 为根目录</td></tr><tr><td>Body</td><td>title</td><td>string</td><td>是</td><td>目录名称</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/folders HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+  &quot;parentId&quot;: null,
+  &quot;title&quot;: &quot;虚拟机与性能&quot;
+}</code></pre><h4>4.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: FolderDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>FolderDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>目录 ID</td></tr><tr><td>data.knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data.parentId</td><td>string | null</td><td>是</td><td>父目录；null 表示根目录</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>目录名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;folder-jvm&quot;,
+    &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+    &quot;parentId&quot;: null,
+    &quot;title&quot;: &quot;虚拟机与性能&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-4-3"><div class="op-heading"><span class="method post">POST</span><div><small>4.3 内容与版本管理</small><h3>新建 Markdown 草稿</h3></div></div><h4>4.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/documents</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>创建未发布文档，目录须属于指定知识库。</td></tr></tbody></table><h4>4.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>Body</td><td>parentId</td><td>string | null</td><td>是</td><td>所属目录；null 为根目录</td></tr><tr><td>Body</td><td>title</td><td>string</td><td>是</td><td>草稿标题</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/documents HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+  &quot;parentId&quot;: &quot;folder-jvm&quot;,
+  &quot;title&quot;: &quot;JVM 基础&quot;
+}</code></pre><h4>4.3.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: DocumentDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>DocumentDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>data.knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data.parentId</td><td>string | null</td><td>是</td><td>目录 ID；null 为根目录</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>管理员看到草稿标题；读者看到生效版本标题</td></tr><tr><td>data.kind</td><td>MARKDOWN | PDF</td><td>是</td><td>文件类型</td></tr><tr><td>data.summary</td><td>string</td><td>是</td><td>摘要</td></tr><tr><td>data.draftContent</td><td>string</td><td>是</td><td>管理员草稿；读者仅收到生效版本正文</td></tr><tr><td>data.draftRevision</td><td>number</td><td>是</td><td>乐观锁修订号</td></tr><tr><td>data.activeVersionId</td><td>string | null</td><td>是</td><td>当前生效版本指针</td></tr><tr><td>data.versions</td><td>DocumentVersionDto[]</td><td>是</td><td>读者仅见生效版本</td></tr><tr><td>data.originalFileName</td><td>string</td><td>否</td><td>PDF 原件名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;doc-jvm&quot;,
+    &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+    &quot;parentId&quot;: &quot;folder-jvm&quot;,
+    &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+    &quot;kind&quot;: &quot;MARKDOWN&quot;,
+    &quot;summary&quot;: &quot;JVM 入门说明&quot;,
+    &quot;draftContent&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+    &quot;draftRevision&quot;: 2,
+    &quot;activeVersionId&quot;: &quot;doc-jvm-v1&quot;,
+    &quot;versions&quot;: [
+      {
+        &quot;id&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;number&quot;: 1,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;content&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+        &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+        &quot;indexedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+      }
+    ]
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-4-4"><div class="op-heading"><span class="method put">PUT</span><div><small>4.4 内容与版本管理</small><h3>保存草稿</h3></div></div><h4>4.4.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/documents/{id}/draft</td></tr><tr><td>请求方式</td><td>PUT</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>用 expectedRevision 做乐观锁；读者仍看到旧生效版本。</td></tr></tbody></table><h4>4.4.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>Body</td><td>expectedRevision</td><td>number</td><td>是</td><td>调用方读到的草稿修订号</td></tr><tr><td>Body</td><td>title</td><td>string</td><td>是</td><td>新标题</td></tr><tr><td>Body</td><td>content</td><td>string</td><td>是</td><td>Markdown 正文</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>PUT /api/v1/admin/documents/doc-jvm/draft HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;expectedRevision&quot;: 2,
+  &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+  &quot;content&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;
+}</code></pre><h4>4.4.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: DocumentDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>DocumentDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>data.knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>data.parentId</td><td>string | null</td><td>是</td><td>目录 ID；null 为根目录</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>管理员看到草稿标题；读者看到生效版本标题</td></tr><tr><td>data.kind</td><td>MARKDOWN | PDF</td><td>是</td><td>文件类型</td></tr><tr><td>data.summary</td><td>string</td><td>是</td><td>摘要</td></tr><tr><td>data.draftContent</td><td>string</td><td>是</td><td>管理员草稿；读者仅收到生效版本正文</td></tr><tr><td>data.draftRevision</td><td>number</td><td>是</td><td>乐观锁修订号</td></tr><tr><td>data.activeVersionId</td><td>string | null</td><td>是</td><td>当前生效版本指针</td></tr><tr><td>data.versions</td><td>DocumentVersionDto[]</td><td>是</td><td>读者仅见生效版本</td></tr><tr><td>data.originalFileName</td><td>string</td><td>否</td><td>PDF 原件名</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;doc-jvm&quot;,
+    &quot;knowledgeBaseId&quot;: &quot;kb-java&quot;,
+    &quot;parentId&quot;: &quot;folder-jvm&quot;,
+    &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+    &quot;kind&quot;: &quot;MARKDOWN&quot;,
+    &quot;summary&quot;: &quot;JVM 入门说明&quot;,
+    &quot;draftContent&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+    &quot;draftRevision&quot;: 2,
+    &quot;activeVersionId&quot;: &quot;doc-jvm-v1&quot;,
+    &quot;versions&quot;: [
+      {
+        &quot;id&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;number&quot;: 1,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;content&quot;: &quot;# JVM 基础与运行时数据区\n\nJVM 是 Java 虚拟机。&quot;,
+        &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+        &quot;indexedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+      }
+    ]
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 409 = Result.code 409（状态冲突）</p></article><article class="operation" id="op-4-5"><div class="op-heading"><span class="method post">POST</span><div><small>4.5 内容与版本管理</small><h3>导入 Markdown 或 PDF</h3></div></div><h4>4.5.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/imports</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>multipart 上传；导入成功只生成草稿，PDF 需要可提取文本。</td></tr></tbody></table><h4>4.5.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Form</td><td>knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>Form</td><td>parentId</td><td>string</td><td>否</td><td>所属目录；省略表示根目录</td></tr><tr><td>Form</td><td>file</td><td>File</td><td>是</td><td>.md 或 .pdf 文件</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/imports HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: multipart/form-data
+
+&lt;multipart fields and binary file&gt;</code></pre><h4>4.5.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ImportJobDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ImportJobDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>导入任务 ID</td></tr><tr><td>data.documentId</td><td>string | null</td><td>是</td><td>成功后生成的草稿 ID</td></tr><tr><td>data.fileName</td><td>string</td><td>是</td><td>上传文件名</td></tr><tr><td>data.status</td><td>JobStatus</td><td>是</td><td>导入状态</td></tr><tr><td>data.error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;import-1&quot;,
+    &quot;documentId&quot;: null,
+    &quot;fileName&quot;: &quot;jvm.md&quot;,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-4-6"><div class="op-heading"><span class="method get">GET</span><div><small>4.6 内容与版本管理</small><h3>查看导入任务</h3></div></div><h4>4.6.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/imports/{id}</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>轮询解析结果与新建草稿 ID。</td></tr></tbody></table><h4>4.6.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>导入任务 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/admin/imports/import-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>4.6.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ImportJobDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ImportJobDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>导入任务 ID</td></tr><tr><td>data.documentId</td><td>string | null</td><td>是</td><td>成功后生成的草稿 ID</td></tr><tr><td>data.fileName</td><td>string</td><td>是</td><td>上传文件名</td></tr><tr><td>data.status</td><td>JobStatus</td><td>是</td><td>导入状态</td></tr><tr><td>data.error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;import-1&quot;,
+    &quot;documentId&quot;: null,
+    &quot;fileName&quot;: &quot;jvm.md&quot;,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-4-7"><div class="op-heading"><span class="method post">POST</span><div><small>4.7 内容与版本管理</small><h3>开始发布</h3></div></div><h4>4.7.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/documents/{id}/publish</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>同文档只允许一个任务；索引成功后 Java 原子切换 active_version_id。</td></tr></tbody></table><h4>4.7.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>Body</td><td>expectedDraftRevision</td><td>number</td><td>是</td><td>提交时草稿修订号</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/documents/doc-jvm/publish HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;expectedDraftRevision&quot;: 2
+}</code></pre><h4>4.7.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: PublishJobDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>PublishJobDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>发布任务 ID</td></tr><tr><td>data.documentId</td><td>string</td><td>是</td><td>目标文档 ID</td></tr><tr><td>data.expectedDraftRevision</td><td>number</td><td>是</td><td>发布时锁定的草稿修订号</td></tr><tr><td>data.status</td><td>JobStatus</td><td>是</td><td>发布状态</td></tr><tr><td>data.error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;publish-1&quot;,
+    &quot;documentId&quot;: &quot;doc-jvm&quot;,
+    &quot;expectedDraftRevision&quot;: 2,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 409 = Result.code 409（状态冲突）</p></article><article class="operation" id="op-4-8"><div class="op-heading"><span class="method get">GET</span><div><small>4.8 内容与版本管理</small><h3>查看发布任务</h3></div></div><h4>4.8.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/publish-jobs/{id}</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>管理员 Token；Java 校验 ADMIN 角色</td></tr><tr><td>接口描述</td><td>发布失败保留旧生效版本。</td></tr></tbody></table><h4>4.8.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>发布任务 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/admin/publish-jobs/publish-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>4.8.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: PublishJobDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>PublishJobDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>发布任务 ID</td></tr><tr><td>data.documentId</td><td>string</td><td>是</td><td>目标文档 ID</td></tr><tr><td>data.expectedDraftRevision</td><td>number</td><td>是</td><td>发布时锁定的草稿修订号</td></tr><tr><td>data.status</td><td>JobStatus</td><td>是</td><td>发布状态</td></tr><tr><td>data.error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;publish-1&quot;,
+    &quot;documentId&quot;: &quot;doc-jvm&quot;,
+    &quot;expectedDraftRevision&quot;: 2,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 404 = Result.code 404（资源不存在）</p></article><section class="group" id="group-5"><h2>5. 会话与问答</h2><p>需登录 Token；Java 校验会话归属</p></section><article class="operation" id="op-5-1"><div class="op-heading"><span class="method get">GET</span><div><small>5.1 会话与问答</small><h3>列出我的会话</h3></div></div><h4>5.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>只能返回当前登录人的会话。</td></tr></tbody></table><h4>5.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/conversations HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>5.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ConversationDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ConversationDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data[].title</td><td>string</td><td>是</td><td>标题</td></tr><tr><td>data[].createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>data[].updatedAt</td><td>ISO 8601</td><td>是</td><td>更新时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;conversation-1&quot;,
+      &quot;title&quot;: &quot;JVM 问答&quot;,
+      &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+      &quot;updatedAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><article class="operation" id="op-5-2"><div class="op-heading"><span class="method post">POST</span><div><small>5.2 会话与问答</small><h3>新建会话</h3></div></div><h4>5.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>创建空会话。</td></tr></tbody></table><h4>5.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/conversations HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{}</code></pre><h4>5.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ConversationDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ConversationDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>标题</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>data.updatedAt</td><td>ISO 8601</td><td>是</td><td>更新时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;conversation-1&quot;,
+    &quot;title&quot;: &quot;JVM 问答&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+    &quot;updatedAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><article class="operation" id="op-5-3"><div class="op-heading"><span class="method get">GET</span><div><small>5.3 会话与问答</small><h3>读取会话详情</h3></div></div><h4>5.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations/{id}</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>检查归属；若回答涉及已撤权文档，则隐藏正文与引用。</td></tr></tbody></table><h4>5.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>会话 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/conversations/conversation-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>5.3.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ConversationDetailDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ConversationDetailDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.conversation</td><td>ConversationDto</td><td>是</td><td>会话元数据</td></tr><tr><td>data.messages</td><td>MessageDto[]</td><td>是</td><td>按创建时间排列的消息</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;conversation&quot;: {
+      &quot;id&quot;: &quot;conversation-1&quot;,
+      &quot;title&quot;: &quot;JVM 问答&quot;,
+      &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+      &quot;updatedAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+    },
+    &quot;messages&quot;: [
+      {
+        &quot;id&quot;: &quot;message-1&quot;,
+        &quot;conversationId&quot;: &quot;conversation-1&quot;,
+        &quot;role&quot;: &quot;USER&quot;,
+        &quot;content&quot;: &quot;什么是 JVM？&quot;,
+        &quot;createdAt&quot;: &quot;2026-10-10T09:00:02Z&quot;,
+        &quot;citations&quot;: [],
+        &quot;evidenceDocumentIds&quot;: []
+      },
+      {
+        &quot;id&quot;: &quot;message-2&quot;,
+        &quot;conversationId&quot;: &quot;conversation-1&quot;,
+        &quot;role&quot;: &quot;ASSISTANT&quot;,
+        &quot;content&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;createdAt&quot;: &quot;2026-10-10T09:00:02Z&quot;,
+        &quot;citations&quot;: [
+          {
+            &quot;documentId&quot;: &quot;doc-jvm&quot;,
+            &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+            &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+            &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+            &quot;anchor&quot;: &quot;content&quot;
+          }
+        ],
+        &quot;evidenceDocumentIds&quot;: [
+          &quot;doc-jvm&quot;
+        ],
+        &quot;runId&quot;: &quot;run-1&quot;,
+        &quot;status&quot;: &quot;COMPLETED&quot;
+      }
+    ]
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-5-4"><div class="op-heading"><span class="method patch">PATCH</span><div><small>5.4 会话与问答</small><h3>重命名会话</h3></div></div><h4>5.4.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations/{id}</td></tr><tr><td>请求方式</td><td>PATCH</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>仅会话所有者可修改标题。</td></tr></tbody></table><h4>5.4.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>Body</td><td>title</td><td>string</td><td>是</td><td>新标题</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>PATCH /api/v1/conversations/conversation-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;title&quot;: &quot;JVM 问答&quot;
+}</code></pre><h4>5.4.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ConversationDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ConversationDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data.title</td><td>string</td><td>是</td><td>标题</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>data.updatedAt</td><td>ISO 8601</td><td>是</td><td>更新时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;conversation-1&quot;,
+    &quot;title&quot;: &quot;JVM 问答&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+    &quot;updatedAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-5-5"><div class="op-heading"><span class="method delete">DELETE</span><div><small>5.5 会话与问答</small><h3>删除会话</h3></div></div><h4>5.5.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations/{id}</td></tr><tr><td>请求方式</td><td>DELETE</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>运行中会话须先结束或取消。</td></tr></tbody></table><h4>5.5.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>会话 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>DELETE /api/v1/conversations/conversation-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>5.5.3 响应数据</h4><p><strong>204 No Content</strong> · 无 · 无响应体</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>无响应体</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 204 No Content</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）、HTTP 409 = Result.code 409（状态冲突）</p></article><article class="operation" id="op-5-6"><div class="op-heading"><span class="method post">POST</span><div><small>5.6 会话与问答</small><h3>提交问题并创建运行</h3></div></div><h4>5.6.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/conversations/{id}/runs</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>Java 创建用户/助手消息并检查会话归属，再交给 Python 检索生成。</td></tr></tbody></table><h4>5.6.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>Body</td><td>question</td><td>string</td><td>是</td><td>用户问题</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/conversations/conversation-1/runs HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;question&quot;: &quot;什么是 JVM？&quot;
+}</code></pre><h4>5.6.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ChatRunDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ChatRunDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>data.conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data.userMessageId</td><td>string</td><td>是</td><td>问题消息 ID</td></tr><tr><td>data.assistantMessageId</td><td>string</td><td>是</td><td>回答消息 ID</td></tr><tr><td>data.status</td><td>RunStatus</td><td>是</td><td>运行状态</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;run-1&quot;,
+    &quot;conversationId&quot;: &quot;conversation-1&quot;,
+    &quot;userMessageId&quot;: &quot;message-1&quot;,
+    &quot;assistantMessageId&quot;: &quot;message-2&quot;,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）、HTTP 503 = Result.code 503（授权依赖不可用）</p></article><article class="operation" id="op-5-7"><div class="op-heading"><span class="method get">GET</span><div><small>5.7 会话与问答</small><h3>订阅回答事件</h3></div></div><h4>5.7.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/chat/runs/{runId}/events</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>SSE 流发送 session、citation、delta、done、error、cancel_requested、cancelled。</td></tr></tbody></table><h4>5.7.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>runId</td><td>string</td><td>是</td><td>运行 ID</td></tr><tr><td>Header</td><td>Accept</td><td>text/event-stream</td><td>是</td><td>期望 SSE</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/chat/runs/run-1/events HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Accept: text/event-stream</code></pre><h4>5.7.3 响应数据</h4><p><strong>200 OK</strong> · SSE · text/event-stream</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>eventId</td><td>string</td><td>是</td><td>SSE id 与 JSON eventId 相同</td></tr><tr><td>runId</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>messageId</td><td>string</td><td>是</td><td>助手消息 ID</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>事件时间</td></tr><tr><td>type</td><td>session | citation | delta | done | error | cancel_requested | cancelled</td><td>是</td><td>事件类型</td></tr><tr><td>citation / text / content / status / code / message</td><td>按事件类型</td><td>否</td><td>见下文 SSE 事件结构</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: text/event-stream
+
+id: run-1:1
+event: session
+data: {&quot;eventId&quot;:&quot;run-1:1&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:00Z&quot;,&quot;type&quot;:&quot;session&quot;,&quot;status&quot;:&quot;RUNNING&quot;}
+
+id: run-1:2
+event: delta
+data: {&quot;eventId&quot;:&quot;run-1:2&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:01Z&quot;,&quot;type&quot;:&quot;delta&quot;,&quot;text&quot;:&quot;JVM 是 Java 虚拟机。&quot;}
+
+id: run-1:3
+event: done
+data: {&quot;eventId&quot;:&quot;run-1:3&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:02Z&quot;,&quot;type&quot;:&quot;done&quot;,&quot;status&quot;:&quot;COMPLETED&quot;,&quot;content&quot;:&quot;JVM 是 Java 虚拟机。&quot;}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-5-8"><div class="op-heading"><span class="method get">GET</span><div><small>5.8 会话与问答</small><h3>查看运行状态</h3></div></div><h4>5.8.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/chat/runs/{runId}</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>断线或请求取消后查询最终状态。</td></tr></tbody></table><h4>5.8.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>runId</td><td>string</td><td>是</td><td>运行 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/chat/runs/run-1 HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>5.8.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ChatRunDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ChatRunDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>data.conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data.userMessageId</td><td>string</td><td>是</td><td>问题消息 ID</td></tr><tr><td>data.assistantMessageId</td><td>string</td><td>是</td><td>回答消息 ID</td></tr><tr><td>data.status</td><td>RunStatus</td><td>是</td><td>运行状态</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;run-1&quot;,
+    &quot;conversationId&quot;: &quot;conversation-1&quot;,
+    &quot;userMessageId&quot;: &quot;message-1&quot;,
+    &quot;assistantMessageId&quot;: &quot;message-2&quot;,
+    &quot;status&quot;: &quot;RUNNING&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）</p></article><article class="operation" id="op-5-9"><div class="op-heading"><span class="method post">POST</span><div><small>5.9 会话与问答</small><h3>请求取消</h3></div></div><h4>5.9.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/chat/runs/{runId}/cancel</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>需登录 Token；Java 校验会话归属</td></tr><tr><td>接口描述</td><td>先进入 CANCEL_REQUESTED；Java 通知 Python 并保存部分回答，最终以状态接口确认为准。</td></tr></tbody></table><h4>5.9.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>runId</td><td>string</td><td>是</td><td>运行 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/chat/runs/run-1/cancel HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{}</code></pre><h4>5.9.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: ChatRunDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>ChatRunDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>data.conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>data.userMessageId</td><td>string</td><td>是</td><td>问题消息 ID</td></tr><tr><td>data.assistantMessageId</td><td>string</td><td>是</td><td>回答消息 ID</td></tr><tr><td>data.status</td><td>RunStatus</td><td>是</td><td>运行状态</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;run-1&quot;,
+    &quot;conversationId&quot;: &quot;conversation-1&quot;,
+    &quot;userMessageId&quot;: &quot;message-1&quot;,
+    &quot;assistantMessageId&quot;: &quot;message-2&quot;,
+    &quot;status&quot;: &quot;CANCEL_REQUESTED&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 404 = Result.code 404（资源不存在）</p></article><section class="group" id="group-6"><h2>6. 检索实验室</h2><p>调试与评测需管理员 Token</p></section><article class="operation" id="op-6-1"><div class="op-heading"><span class="method get">GET</span><div><small>6.1 检索实验室</small><h3>读取正式策略</h3></div></div><h4>6.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/retrieval/strategy</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>需登录 Token</td></tr><tr><td>接口描述</td><td>读取管理员已手动启用的线上检索参数。</td></tr></tbody></table><h4>6.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/retrieval/strategy HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>6.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: StrategyDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>StrategyDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>正式策略 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>data.config</td><td>RetrievalConfigDto</td><td>是</td><td>已启用配置</td></tr><tr><td>data.activatedAt</td><td>ISO 8601</td><td>是</td><td>启用时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;strategy-default&quot;,
+    &quot;name&quot;: &quot;默认混合检索&quot;,
+    &quot;config&quot;: {
+      &quot;ftsTopK&quot;: 8,
+      &quot;vectorTopK&quot;: 8,
+      &quot;finalTopK&quot;: 5,
+      &quot;rrfK&quot;: 60,
+      &quot;ftsWeight&quot;: 1,
+      &quot;vectorWeight&quot;: 1,
+      &quot;rerankEnabled&quot;: true,
+      &quot;rerankTopK&quot;: 5,
+      &quot;ftsMinScore&quot;: 0.55,
+      &quot;vectorMinSimilarity&quot;: 0.58,
+      &quot;rerankMinScore&quot;: 0.5,
+      &quot;minEvidenceCount&quot;: 1,
+      &quot;coverageCheckEnabled&quot;: true
+    },
+    &quot;activatedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 401 = Result.code 401（未登录）</p></article><article class="operation" id="op-6-2"><div class="op-heading"><span class="method post">POST</span><div><small>6.2 检索实验室</small><h3>单次 Query 调试</h3></div></div><h4>6.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/retrieval/debug</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>检索全部已发布文档，显示 FTS、向量、RRF、重排和证据结果。</td></tr></tbody></table><h4>6.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>query</td><td>string</td><td>是</td><td>调试问题</td></tr><tr><td>Body</td><td>config</td><td>RetrievalConfigDto</td><td>是</td><td>本次策略参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/retrieval/debug HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;query&quot;: &quot;什么是 JVM？&quot;,
+  &quot;config&quot;: {
+    &quot;ftsTopK&quot;: 8,
+    &quot;vectorTopK&quot;: 8,
+    &quot;finalTopK&quot;: 5,
+    &quot;rrfK&quot;: 60,
+    &quot;ftsWeight&quot;: 1,
+    &quot;vectorWeight&quot;: 1,
+    &quot;rerankEnabled&quot;: true,
+    &quot;rerankTopK&quot;: 5,
+    &quot;ftsMinScore&quot;: 0.55,
+    &quot;vectorMinSimilarity&quot;: 0.58,
+    &quot;rerankMinScore&quot;: 0.5,
+    &quot;minEvidenceCount&quot;: 1,
+    &quot;coverageCheckEnabled&quot;: true
+  }
+}</code></pre><h4>6.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: DebugResultDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>DebugResultDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.query</td><td>string</td><td>是</td><td>调试问题</td></tr><tr><td>data.fts</td><td>CandidateDto[]</td><td>是</td><td>FTS 候选</td></tr><tr><td>data.vector</td><td>CandidateDto[]</td><td>是</td><td>向量候选</td></tr><tr><td>data.fused</td><td>CandidateDto[]</td><td>是</td><td>RRF 融合排名</td></tr><tr><td>data.reranked</td><td>CandidateDto[]</td><td>是</td><td>重排排名</td></tr><tr><td>data.evidence</td><td>CitationDto[]</td><td>是</td><td>有效证据</td></tr><tr><td>data.degradedLane</td><td>FTS | VECTOR</td><td>否</td><td>失败并被降级的链路</td></tr><tr><td>data.sufficient</td><td>boolean</td><td>是</td><td>证据是否充分</td></tr><tr><td>data.answerPreview</td><td>string</td><td>是</td><td>回答预览或固定弃答文本</td></tr><tr><td>data.timingsMs</td><td>object</td><td>是</td><td>fts/vector/fusion/rerank/total 阶段耗时</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;query&quot;: &quot;什么是 JVM？&quot;,
+    &quot;fts&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.77,
+        &quot;rank&quot;: 1,
+        &quot;lane&quot;: &quot;FTS&quot;
+      }
+    ],
+    &quot;vector&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.72,
+        &quot;rank&quot;: 1,
+        &quot;lane&quot;: &quot;VECTOR&quot;
+      }
+    ],
+    &quot;fused&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.0328,
+        &quot;rank&quot;: 1,
+        &quot;lane&quot;: &quot;FUSED&quot;
+      }
+    ],
+    &quot;reranked&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.91,
+        &quot;rank&quot;: 1,
+        &quot;lane&quot;: &quot;RERANK&quot;
+      }
+    ],
+    &quot;evidence&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;anchor&quot;: &quot;content&quot;
+      }
+    ],
+    &quot;sufficient&quot;: true,
+    &quot;answerPreview&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+    &quot;timingsMs&quot;: {
+      &quot;fts&quot;: 12,
+      &quot;vector&quot;: 18,
+      &quot;fusion&quot;: 1,
+      &quot;rerank&quot;: 15,
+      &quot;total&quot;: 46
+    }
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）、HTTP 503 = Result.code 503（授权依赖不可用）</p></article><article class="operation" id="op-6-3"><div class="op-heading"><span class="method get">GET</span><div><small>6.3 检索实验室</small><h3>列出标注数据集</h3></div></div><h4>6.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/evaluation/datasets</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>返回文档级 0–3 相关性标注。</td></tr></tbody></table><h4>6.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/admin/evaluation/datasets HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>6.3.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: EvaluationDatasetDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>EvaluationDatasetDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>数据集 ID</td></tr><tr><td>data[].name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>data[].description</td><td>string</td><td>是</td><td>说明</td></tr><tr><td>data[].cases</td><td>EvaluationCaseDto[]</td><td>是</td><td>标注样本</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;dataset-core&quot;,
+      &quot;name&quot;: &quot;核心检索样本&quot;,
+      &quot;description&quot;: &quot;JVM、GC 和 Redis 标注&quot;,
+      &quot;cases&quot;: [
+        {
+          &quot;id&quot;: &quot;case-jvm&quot;,
+          &quot;query&quot;: &quot;JVM 的定义和运行时数据区&quot;,
+          &quot;relevance&quot;: {
+            &quot;doc-jvm&quot;: 3,
+            &quot;doc-gc&quot;: 1
+          }
+        }
+      ]
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-6-4"><div class="op-heading"><span class="method post">POST</span><div><small>6.4 检索实验室</small><h3>冻结实验快照</h3></div></div><h4>6.4.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/evaluation/snapshots</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>冻结全部已发布文档版本、语料/索引、标注及模型环境指纹。</td></tr></tbody></table><h4>6.4.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>datasetId</td><td>string</td><td>是</td><td>数据集 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/evaluation/snapshots HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;datasetId&quot;: &quot;dataset-core&quot;
+}</code></pre><h4>6.4.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: EvaluationSnapshotDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>EvaluationSnapshotDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>冻结快照 ID</td></tr><tr><td>data.datasetId</td><td>string</td><td>是</td><td>数据集 ID</td></tr><tr><td>data.documentVersions</td><td>Record&lt;documentId,versionId&gt;</td><td>是</td><td>冻结的全部已发布文档版本</td></tr><tr><td>data.cases</td><td>EvaluationCaseDto[]</td><td>是</td><td>冻结标注</td></tr><tr><td>data.corpusFingerprint</td><td>string</td><td>是</td><td>切片、索引及语料指纹</td></tr><tr><td>data.permissionFingerprint</td><td>string</td><td>是</td><td>角色可见范围策略指纹</td></tr><tr><td>data.datasetFingerprint</td><td>string</td><td>是</td><td>标注指纹</td></tr><tr><td>data.modelFingerprint</td><td>string</td><td>是</td><td>嵌入/重排模型指纹</td></tr><tr><td>data.environmentFingerprint</td><td>string</td><td>是</td><td>运行环境指纹</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>冻结时间</td></tr><tr><td>data.status</td><td>VALID | INVALIDATED</td><td>是</td><td>快照有效状态</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;snapshot-1&quot;,
+    &quot;datasetId&quot;: &quot;dataset-core&quot;,
+    &quot;documentVersions&quot;: {
+      &quot;doc-jvm&quot;: &quot;doc-jvm-v1&quot;
+    },
+    &quot;cases&quot;: [
+      {
+        &quot;id&quot;: &quot;case-jvm&quot;,
+        &quot;query&quot;: &quot;JVM 的定义和运行时数据区&quot;,
+        &quot;relevance&quot;: {
+          &quot;doc-jvm&quot;: 3,
+          &quot;doc-gc&quot;: 1
+        }
+      }
+    ],
+    &quot;corpusFingerprint&quot;: &quot;c8a1&quot;,
+    &quot;permissionFingerprint&quot;: &quot;p38f&quot;,
+    &quot;datasetFingerprint&quot;: &quot;d924&quot;,
+    &quot;modelFingerprint&quot;: &quot;m217&quot;,
+    &quot;environmentFingerprint&quot;: &quot;e441&quot;,
+    &quot;createdAt&quot;: &quot;2026-10-10T09:00:00Z&quot;,
+    &quot;status&quot;: &quot;VALID&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400 = Result.code 400（参数无效）、HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-6-5"><div class="op-heading"><span class="method post">POST</span><div><small>6.5 检索实验室</small><h3>运行离线评测</h3></div></div><h4>6.5.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/evaluation/runs</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>在同一快照上运行本次冻结参数；启动及运行中核验当前权限。</td></tr></tbody></table><h4>6.5.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>snapshotId</td><td>string</td><td>是</td><td>冻结快照 ID</td></tr><tr><td>Body</td><td>name</td><td>string</td><td>是</td><td>实验名称</td></tr><tr><td>Body</td><td>config</td><td>RetrievalConfigDto</td><td>是</td><td>本次策略参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/evaluation/runs HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{
+  &quot;snapshotId&quot;: &quot;snapshot-1&quot;,
+  &quot;name&quot;: &quot;基线&quot;,
+  &quot;config&quot;: {
+    &quot;ftsTopK&quot;: 8,
+    &quot;vectorTopK&quot;: 8,
+    &quot;finalTopK&quot;: 5,
+    &quot;rrfK&quot;: 60,
+    &quot;ftsWeight&quot;: 1,
+    &quot;vectorWeight&quot;: 1,
+    &quot;rerankEnabled&quot;: true,
+    &quot;rerankTopK&quot;: 5,
+    &quot;ftsMinScore&quot;: 0.55,
+    &quot;vectorMinSimilarity&quot;: 0.58,
+    &quot;rerankMinScore&quot;: 0.5,
+    &quot;minEvidenceCount&quot;: 1,
+    &quot;coverageCheckEnabled&quot;: true
+  }
+}</code></pre><h4>6.5.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: EvaluationRunDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>EvaluationRunDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>评测运行 ID</td></tr><tr><td>data.snapshotId</td><td>string</td><td>是</td><td>共用快照 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>实验名</td></tr><tr><td>data.config</td><td>RetrievalConfigDto</td><td>是</td><td>本次冻结参数</td></tr><tr><td>data.status</td><td>JobStatus</td><td>是</td><td>运行状态</td></tr><tr><td>data.metrics</td><td>object</td><td>是</td><td>recallAtK/mrr/ndcg/p50Ms/p95Ms</td></tr><tr><td>data.results</td><td>object[]</td><td>是</td><td>caseId/query/rankedDocumentIds/totalMs</td></tr><tr><td>data.createdAt</td><td>ISO 8601</td><td>是</td><td>启动时间</td></tr><tr><td>data.redacted</td><td>boolean</td><td>否</td><td>读取时因当前权限撤销而隐藏明细</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;evaluation-1&quot;,
+    &quot;snapshotId&quot;: &quot;snapshot-1&quot;,
+    &quot;name&quot;: &quot;基线&quot;,
+    &quot;config&quot;: {
+      &quot;ftsTopK&quot;: 8,
+      &quot;vectorTopK&quot;: 8,
+      &quot;finalTopK&quot;: 5,
+      &quot;rrfK&quot;: 60,
+      &quot;ftsWeight&quot;: 1,
+      &quot;vectorWeight&quot;: 1,
+      &quot;rerankEnabled&quot;: true,
+      &quot;rerankTopK&quot;: 5,
+      &quot;ftsMinScore&quot;: 0.55,
+      &quot;vectorMinSimilarity&quot;: 0.58,
+      &quot;rerankMinScore&quot;: 0.5,
+      &quot;minEvidenceCount&quot;: 1,
+      &quot;coverageCheckEnabled&quot;: true
+    },
+    &quot;status&quot;: &quot;SUCCEEDED&quot;,
+    &quot;metrics&quot;: {
+      &quot;recallAtK&quot;: 1,
+      &quot;mrr&quot;: 1,
+      &quot;ndcg&quot;: 1,
+      &quot;p50Ms&quot;: 45,
+      &quot;p95Ms&quot;: 71
+    },
+    &quot;results&quot;: [
+      {
+        &quot;caseId&quot;: &quot;case-jvm&quot;,
+        &quot;query&quot;: &quot;JVM 的定义和运行时数据区&quot;,
+        &quot;rankedDocumentIds&quot;: [
+          &quot;doc-jvm&quot;
+        ],
+        &quot;totalMs&quot;: 45
+      }
+    ],
+    &quot;createdAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 409 = Result.code 409（快照失效）、HTTP 503 = Result.code 503（授权依赖不可用）</p></article><article class="operation" id="op-6-6"><div class="op-heading"><span class="method get">GET</span><div><small>6.6 检索实验室</small><h3>列出已保存评测</h3></div></div><h4>6.6.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/evaluation/runs</td></tr><tr><td>请求方式</td><td>GET</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>读取时再次校验当前权限，无权结果以 redacted:true 隐藏明细。</td></tr></tbody></table><h4>6.6.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>无业务参数</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>GET /api/v1/admin/evaluation/runs HTTP/1.1
+Authorization: &lt;登录 Token&gt;</code></pre><h4>6.6.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: EvaluationRunDto[]） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>EvaluationRunDto[]</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data[].id</td><td>string</td><td>是</td><td>评测运行 ID</td></tr><tr><td>data[].snapshotId</td><td>string</td><td>是</td><td>共用快照 ID</td></tr><tr><td>data[].name</td><td>string</td><td>是</td><td>实验名</td></tr><tr><td>data[].config</td><td>RetrievalConfigDto</td><td>是</td><td>本次冻结参数</td></tr><tr><td>data[].status</td><td>JobStatus</td><td>是</td><td>运行状态</td></tr><tr><td>data[].metrics</td><td>object</td><td>是</td><td>recallAtK/mrr/ndcg/p50Ms/p95Ms</td></tr><tr><td>data[].results</td><td>object[]</td><td>是</td><td>caseId/query/rankedDocumentIds/totalMs</td></tr><tr><td>data[].createdAt</td><td>ISO 8601</td><td>是</td><td>启动时间</td></tr><tr><td>data[].redacted</td><td>boolean</td><td>否</td><td>读取时因当前权限撤销而隐藏明细</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;evaluation-1&quot;,
+      &quot;snapshotId&quot;: &quot;snapshot-1&quot;,
+      &quot;name&quot;: &quot;基线&quot;,
+      &quot;config&quot;: {
+        &quot;ftsTopK&quot;: 8,
+        &quot;vectorTopK&quot;: 8,
+        &quot;finalTopK&quot;: 5,
+        &quot;rrfK&quot;: 60,
+        &quot;ftsWeight&quot;: 1,
+        &quot;vectorWeight&quot;: 1,
+        &quot;rerankEnabled&quot;: true,
+        &quot;rerankTopK&quot;: 5,
+        &quot;ftsMinScore&quot;: 0.55,
+        &quot;vectorMinSimilarity&quot;: 0.58,
+        &quot;rerankMinScore&quot;: 0.5,
+        &quot;minEvidenceCount&quot;: 1,
+        &quot;coverageCheckEnabled&quot;: true
+      },
+      &quot;status&quot;: &quot;SUCCEEDED&quot;,
+      &quot;metrics&quot;: {
+        &quot;recallAtK&quot;: 1,
+        &quot;mrr&quot;: 1,
+        &quot;ndcg&quot;: 1,
+        &quot;p50Ms&quot;: 45,
+        &quot;p95Ms&quot;: 71
+      },
+      &quot;results&quot;: [
+        {
+          &quot;caseId&quot;: &quot;case-jvm&quot;,
+          &quot;query&quot;: &quot;JVM 的定义和运行时数据区&quot;,
+          &quot;rankedDocumentIds&quot;: [
+            &quot;doc-jvm&quot;
+          ],
+          &quot;totalMs&quot;: 45
+        }
+      ],
+      &quot;createdAt&quot;: &quot;2026-10-10T09:01:00Z&quot;
+    }
+  ],
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）</p></article><article class="operation" id="op-6-7"><div class="op-heading"><span class="method post">POST</span><div><small>6.7 检索实验室</small><h3>手动启用评测策略</h3></div></div><h4>6.7.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/api/v1/admin/evaluation/runs/{id}/activate</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>调试与评测需管理员 Token</td></tr><tr><td>接口描述</td><td>只有管理员单独操作才把实验配置设为正式策略。</td></tr></tbody></table><h4>6.7.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>评测运行 ID</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /api/v1/admin/evaluation/runs/evaluation-1/activate HTTP/1.1
+Authorization: &lt;登录 Token&gt;
+Content-Type: application/json
+
+{}</code></pre><h4>6.7.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: StrategyDto） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>StrategyDto</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.id</td><td>string</td><td>是</td><td>正式策略 ID</td></tr><tr><td>data.name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>data.config</td><td>RetrievalConfigDto</td><td>是</td><td>已启用配置</td></tr><tr><td>data.activatedAt</td><td>ISO 8601</td><td>是</td><td>启用时间</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;strategy-default&quot;,
+    &quot;name&quot;: &quot;默认混合检索&quot;,
+    &quot;config&quot;: {
+      &quot;ftsTopK&quot;: 8,
+      &quot;vectorTopK&quot;: 8,
+      &quot;finalTopK&quot;: 5,
+      &quot;rrfK&quot;: 60,
+      &quot;ftsWeight&quot;: 1,
+      &quot;vectorWeight&quot;: 1,
+      &quot;rerankEnabled&quot;: true,
+      &quot;rerankTopK&quot;: 5,
+      &quot;ftsMinScore&quot;: 0.55,
+      &quot;vectorMinSimilarity&quot;: 0.58,
+      &quot;rerankMinScore&quot;: 0.5,
+      &quot;minEvidenceCount&quot;: 1,
+      &quot;coverageCheckEnabled&quot;: true
+    },
+    &quot;activatedAt&quot;: &quot;2026-10-10T09:00:00Z&quot;
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 409 = Result.code 409（状态冲突）</p></article><section class="group" id="group-7"><h2>7. 内部 Java → Python</h2><p>仅服务网络；双向服务凭据</p></section><article class="operation" id="op-7-1"><div class="op-heading"><span class="method post">POST</span><div><small>7.1 内部 Java → Python</small><h3>提取 PDF 文本</h3></div></div><h4>7.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/ingestion/extract</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>仅服务网络；双向服务凭据</td></tr><tr><td>接口描述</td><td>Python 解析可提取文字的 PDF；扫描件或空文本应返回解析错误。</td></tr></tbody></table><h4>7.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Form</td><td>file</td><td>File</td><td>是</td><td>受控 PDF 原件</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/ingestion/extract HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: multipart/form-data
+
+&lt;multipart fields and binary file&gt;</code></pre><h4>7.1.3 响应数据</h4><p><strong>200 OK</strong> · InternalExtractResult · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>text</td><td>string</td><td>是</td><td>PDF 提取文本</td></tr><tr><td>metadata</td><td>object</td><td>是</td><td>页数等元数据</td></tr><tr><td>warnings</td><td>string[]</td><td>是</td><td>解析警告</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;text&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+  &quot;metadata&quot;: {
+    &quot;pageCount&quot;: 2
+  },
+  &quot;warnings&quot;: []
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400（参数无效）</p></article><article class="operation" id="op-7-2"><div class="op-heading"><span class="method post">POST</span><div><small>7.2 内部 Java → Python</small><h3>生成索引切片</h3></div></div><h4>7.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/ingestion/index</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>仅服务网络；双向服务凭据</td></tr><tr><td>接口描述</td><td>根据锁定草稿生成切片、FTS 文本和向量；Java 验证后写入并发布。</td></tr></tbody></table><h4>7.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>taskId</td><td>string</td><td>是</td><td>发布任务 ID</td></tr><tr><td>Body</td><td>documentId</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>Body</td><td>draftRevision</td><td>number</td><td>是</td><td>锁定的草稿修订号</td></tr><tr><td>Body</td><td>content</td><td>string</td><td>是</td><td>本次草稿快照</td></tr><tr><td>Body</td><td>embeddingModel</td><td>string</td><td>是</td><td>嵌入模型标识</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/ingestion/index HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: application/json
+
+{
+  &quot;taskId&quot;: &quot;publish-1&quot;,
+  &quot;documentId&quot;: &quot;doc-jvm&quot;,
+  &quot;draftRevision&quot;: 2,
+  &quot;content&quot;: &quot;# JVM 基础\n\nJVM 是 Java 虚拟机。&quot;,
+  &quot;embeddingModel&quot;: &quot;embedding-v1&quot;
+}</code></pre><h4>7.2.3 响应数据</h4><p><strong>200 OK</strong> · InternalIndexResult · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>chunks</td><td>object[]</td><td>是</td><td>ordinal/content/searchText/embedding；由 Java 验证并写入</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;chunks&quot;: [
+    {
+      &quot;ordinal&quot;: 0,
+      &quot;content&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+      &quot;searchText&quot;: &quot;jvm 虚拟机&quot;,
+      &quot;embedding&quot;: [
+        0.12,
+        0.34
+      ]
+    }
+  ]
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 400（参数无效）、HTTP 409（状态冲突）</p></article><article class="operation" id="op-7-3"><div class="op-heading"><span class="method post">POST</span><div><small>7.3 内部 Java → Python</small><h3>发起检索生成</h3></div></div><h4>7.3.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/retrieval/runs</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>双向服务凭据；scopeToken 用于 Java 后续授权搜索</td></tr><tr><td>接口描述</td><td>只传问题、已授权历史和短期 scopeToken；Python 编排两路检索、证据与回答，不接收用户 ID/角色。</td></tr></tbody></table><h4>7.3.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>runId</td><td>string</td><td>是</td><td>问答任务 ID</td></tr><tr><td>Body</td><td>scopeToken</td><td>string</td><td>是</td><td>Java 签发的短期随机凭证</td></tr><tr><td>Body</td><td>question</td><td>string</td><td>是</td><td>用户问题</td></tr><tr><td>Body</td><td>history</td><td>object[]</td><td>是</td><td>已校验且排除撤权内容的历史</td></tr><tr><td>Body</td><td>config</td><td>RetrievalConfigDto</td><td>是</td><td>检索配置</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/retrieval/runs HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: application/json
+
+{
+  &quot;runId&quot;: &quot;run-1&quot;,
+  &quot;scopeToken&quot;: &quot;&lt;短期随机凭证&gt;&quot;,
+  &quot;question&quot;: &quot;什么是 JVM？&quot;,
+  &quot;history&quot;: [],
+  &quot;config&quot;: {
+    &quot;ftsTopK&quot;: 8,
+    &quot;vectorTopK&quot;: 8,
+    &quot;finalTopK&quot;: 5,
+    &quot;rrfK&quot;: 60,
+    &quot;ftsWeight&quot;: 1,
+    &quot;vectorWeight&quot;: 1,
+    &quot;rerankEnabled&quot;: true,
+    &quot;rerankTopK&quot;: 5,
+    &quot;ftsMinScore&quot;: 0.55,
+    &quot;vectorMinSimilarity&quot;: 0.58,
+    &quot;rerankMinScore&quot;: 0.5,
+    &quot;minEvidenceCount&quot;: 1,
+    &quot;coverageCheckEnabled&quot;: true
+  }
+}</code></pre><h4>7.3.3 响应数据</h4><p><strong>200 OK</strong> · SSE · text/event-stream</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>eventId</td><td>string</td><td>是</td><td>SSE id 与 JSON eventId 相同</td></tr><tr><td>runId</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>messageId</td><td>string</td><td>是</td><td>助手消息 ID</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>事件时间</td></tr><tr><td>type</td><td>session | citation | delta | done | error | cancel_requested | cancelled</td><td>是</td><td>事件类型</td></tr><tr><td>citation / text / content / status / code / message</td><td>按事件类型</td><td>否</td><td>见下文 SSE 事件结构</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: text/event-stream
+
+id: run-1:1
+event: session
+data: {&quot;eventId&quot;:&quot;run-1:1&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:00Z&quot;,&quot;type&quot;:&quot;session&quot;,&quot;status&quot;:&quot;RUNNING&quot;}
+
+id: run-1:2
+event: delta
+data: {&quot;eventId&quot;:&quot;run-1:2&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:01Z&quot;,&quot;type&quot;:&quot;delta&quot;,&quot;text&quot;:&quot;JVM 是 Java 虚拟机。&quot;}
+
+id: run-1:3
+event: done
+data: {&quot;eventId&quot;:&quot;run-1:3&quot;,&quot;runId&quot;:&quot;run-1&quot;,&quot;conversationId&quot;:&quot;conversation-1&quot;,&quot;messageId&quot;:&quot;message-2&quot;,&quot;createdAt&quot;:&quot;2026-10-10T09:00:02Z&quot;,&quot;type&quot;:&quot;done&quot;,&quot;status&quot;:&quot;COMPLETED&quot;,&quot;content&quot;:&quot;JVM 是 Java 虚拟机。&quot;}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403（权限不足）、HTTP 503（授权依赖不可用）</p></article><article class="operation" id="op-7-4"><div class="op-heading"><span class="method post">POST</span><div><small>7.4 内部 Java → Python</small><h3>通知协作取消</h3></div></div><h4>7.4.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/retrieval/runs/{id}/cancel</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>仅服务网络；双向服务凭据</td></tr><tr><td>接口描述</td><td>Python 尽力停止后续检索和生成；接收确认不等于终态。</td></tr></tbody></table><h4>7.4.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Path</td><td>id</td><td>string</td><td>是</td><td>运行 ID</td></tr><tr><td>Body</td><td>reason</td><td>USER_REQUEST</td><td>是</td><td>取消原因</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/retrieval/runs/run-1/cancel HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: application/json
+
+{
+  &quot;reason&quot;: &quot;USER_REQUEST&quot;
+}</code></pre><h4>7.4.3 响应数据</h4><p><strong>200 OK</strong> · InternalCancelResult · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>accepted</td><td>boolean</td><td>是</td><td>仅表示收到取消信号，不保证模型已停</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;accepted&quot;: true
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 404（资源不存在）</p></article><section class="group" id="group-8"><h2>8. 内部 Python → Java</h2><p>仅服务网络；服务凭据 + 短期 scopeToken</p></section><article class="operation" id="op-8-1"><div class="op-heading"><span class="method post">POST</span><div><small>8.1 内部 Python → Java</small><h3>授权 FTS 候选检索</h3></div></div><h4>8.1.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/authorized-search/fts</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>仅服务网络；服务凭据 + 短期 scopeToken</td></tr><tr><td>接口描述</td><td>Java 每次核验服务凭据、scopeToken 与当前权限；SQL 候选条件先授权，再排序及 LIMIT。</td></tr></tbody></table><h4>8.1.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>scopeToken</td><td>string</td><td>是</td><td>短期请求凭证</td></tr><tr><td>Body</td><td>segmentedQuery</td><td>string</td><td>是</td><td>与索引同版本分词规则的查询词</td></tr><tr><td>Body</td><td>topK</td><td>number</td><td>是</td><td>本路 Top-K</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/authorized-search/fts HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: application/json
+
+{
+  &quot;scopeToken&quot;: &quot;&lt;短期随机凭证&gt;&quot;,
+  &quot;segmentedQuery&quot;: &quot;jvm 虚拟机&quot;,
+  &quot;topK&quot;: 8
+}</code></pre><h4>8.1.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: InternalSearchResult） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>InternalSearchResult</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.candidates</td><td>InternalCandidateDto[]</td><td>是</td><td>已经完成权限过滤的候选</td></tr><tr><td>data.timingMs</td><td>number</td><td>是</td><td>Java 授权和查询耗时</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;candidates&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;chunkId&quot;: &quot;chunk-1&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.77,
+        &quot;rank&quot;: 1
+      }
+    ],
+    &quot;timingMs&quot;: 12
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 503 = Result.code 503（授权依赖不可用）、HTTP 503 = Result.code 503（关键词检索不可用）</p></article><article class="operation" id="op-8-2"><div class="op-heading"><span class="method post">POST</span><div><small>8.2 内部 Python → Java</small><h3>授权向量候选检索</h3></div></div><h4>8.2.1 基本信息</h4><table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>请求路径</td><td>/internal/v1/authorized-search/vector</td></tr><tr><td>请求方式</td><td>POST</td></tr><tr><td>鉴权</td><td>仅服务网络；服务凭据 + 短期 scopeToken</td></tr><tr><td>接口描述</td><td>pgvector 在授权候选集合内按距离排序并 LIMIT；不能全局 Top-K 后过滤。</td></tr></tbody></table><h4>8.2.2 请求参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>Body</td><td>scopeToken</td><td>string</td><td>是</td><td>短期请求凭证</td></tr><tr><td>Body</td><td>embedding</td><td>number[]</td><td>是</td><td>问题向量；维度须匹配索引</td></tr><tr><td>Body</td><td>topK</td><td>number</td><td>是</td><td>本路 Top-K</td></tr></tbody></table><p class="sample-label">请求示例</p><pre><code>POST /internal/v1/authorized-search/vector HTTP/1.1
+Authorization: Bearer &lt;服务凭据&gt;
+Content-Type: application/json
+
+{
+  &quot;scopeToken&quot;: &quot;&lt;短期随机凭证&gt;&quot;,
+  &quot;embedding&quot;: [
+    0.12,
+    0.34
+  ],
+  &quot;topK&quot;: 8
+}</code></pre><h4>8.2.3 响应数据</h4><p><strong>200 OK</strong> · Result（data: InternalSearchResult） · application/json</p><table><thead><tr><th>参数名</th><th>类型</th><th>是否必须</th><th>备注</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>InternalSearchResult</td><td>是</td><td>业务数据；无数据时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>本次操作的反馈信息；无反馈时可为 null 或空字符串</td></tr><tr><td>data.candidates</td><td>InternalCandidateDto[]</td><td>是</td><td>已经完成权限过滤的候选</td></tr><tr><td>data.timingMs</td><td>number</td><td>是</td><td>Java 授权和查询耗时</td></tr></tbody></table><p class="sample-label">响应示例</p><pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;code&quot;: 200,
+  &quot;data&quot;: {
+    &quot;candidates&quot;: [
+      {
+        &quot;documentId&quot;: &quot;doc-jvm&quot;,
+        &quot;versionId&quot;: &quot;doc-jvm-v1&quot;,
+        &quot;chunkId&quot;: &quot;chunk-1&quot;,
+        &quot;title&quot;: &quot;JVM 基础与运行时数据区&quot;,
+        &quot;excerpt&quot;: &quot;JVM 是 Java 虚拟机。&quot;,
+        &quot;score&quot;: 0.77,
+        &quot;rank&quot;: 1
+      }
+    ],
+    &quot;timingMs&quot;: 12
+  },
+  &quot;message&quot;: &quot;&quot;
+}</code></pre><p class="errors"><strong>主要错误：</strong>HTTP 403 = Result.code 403（权限不足）、HTTP 503 = Result.code 503（授权依赖不可用）、HTTP 503 = Result.code 503（向量检索不可用）</p></article><section class="group" id="schemas"><h2>通用数据结构</h2><p>接口响应字段表中的嵌套 DTO 在这里完整列出。</p></section><section class="schema"><h3>UserDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>用户 ID</td></tr><tr><td>name</td><td>string</td><td>是</td><td>显示名称</td></tr><tr><td>email</td><td>string</td><td>是</td><td>登录邮箱</td></tr><tr><td>role</td><td>READER | ADMIN</td><td>是</td><td>服务端角色</td></tr></tbody></table></section><section class="schema"><h3>KnowledgeBaseDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>知识库 ID</td></tr><tr><td>name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>description</td><td>string</td><td>是</td><td>说明</td></tr><tr><td>icon</td><td>string</td><td>是</td><td>前端显示字符</td></tr><tr><td>documentCount</td><td>number</td><td>是</td><td>文档总数</td></tr></tbody></table></section><section class="schema"><h3>FolderDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>目录 ID</td></tr><tr><td>knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>parentId</td><td>string | null</td><td>是</td><td>父目录；null 表示根目录</td></tr><tr><td>title</td><td>string</td><td>是</td><td>目录名</td></tr></tbody></table></section><section class="schema"><h3>DocumentVersionDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>不可变版本 ID</td></tr><tr><td>number</td><td>number</td><td>是</td><td>版本序号</td></tr><tr><td>title</td><td>string</td><td>是</td><td>发布时的标题快照</td></tr><tr><td>content</td><td>string</td><td>是</td><td>发布正文</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>indexedAt</td><td>ISO 8601</td><td>是</td><td>索引成功时间</td></tr></tbody></table></section><section class="schema"><h3>DocumentDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>knowledgeBaseId</td><td>string</td><td>是</td><td>所属知识库</td></tr><tr><td>parentId</td><td>string | null</td><td>是</td><td>目录 ID；null 为根目录</td></tr><tr><td>title</td><td>string</td><td>是</td><td>管理员看到草稿标题；读者看到生效版本标题</td></tr><tr><td>kind</td><td>MARKDOWN | PDF</td><td>是</td><td>文件类型</td></tr><tr><td>summary</td><td>string</td><td>是</td><td>摘要</td></tr><tr><td>draftContent</td><td>string</td><td>是</td><td>管理员草稿；读者仅收到生效版本正文</td></tr><tr><td>draftRevision</td><td>number</td><td>是</td><td>乐观锁修订号</td></tr><tr><td>activeVersionId</td><td>string | null</td><td>是</td><td>当前生效版本指针</td></tr><tr><td>versions</td><td>DocumentVersionDto[]</td><td>是</td><td>读者仅见生效版本</td></tr><tr><td>originalFileName</td><td>string</td><td>否</td><td>PDF 原件名</td></tr></tbody></table></section><section class="schema"><h3>CitationDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>documentId</td><td>string</td><td>是</td><td>引用文档 ID</td></tr><tr><td>versionId</td><td>string</td><td>是</td><td>引用版本 ID</td></tr><tr><td>title</td><td>string</td><td>是</td><td>引用标题</td></tr><tr><td>excerpt</td><td>string</td><td>是</td><td>证据摘录</td></tr><tr><td>anchor</td><td>string</td><td>是</td><td>定位锚点</td></tr></tbody></table></section><section class="schema"><h3>SearchHitDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>documentId</td><td>string</td><td>是</td><td>文档 ID</td></tr><tr><td>knowledgeBaseId</td><td>string</td><td>是</td><td>知识库 ID</td></tr><tr><td>title</td><td>string</td><td>是</td><td>当前生效版本标题</td></tr><tr><td>excerpt</td><td>string</td><td>是</td><td>命中摘录</td></tr><tr><td>score</td><td>number</td><td>是</td><td>当前搜索策略分数</td></tr><tr><td>citation</td><td>CitationDto</td><td>是</td><td>可打开的引用</td></tr></tbody></table></section><section class="schema"><h3>ConversationDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>title</td><td>string</td><td>是</td><td>标题</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>updatedAt</td><td>ISO 8601</td><td>是</td><td>更新时间</td></tr></tbody></table></section><section class="schema"><h3>MessageDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>消息 ID</td></tr><tr><td>conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>role</td><td>USER | ASSISTANT</td><td>是</td><td>发言方</td></tr><tr><td>content</td><td>string | null</td><td>是</td><td>撤权回答为 null</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr><tr><td>citations</td><td>CitationDto[]</td><td>是</td><td>当前可见引用</td></tr><tr><td>evidenceDocumentIds</td><td>string[]</td><td>是</td><td>审计用证据文档 ID</td></tr><tr><td>runId</td><td>string</td><td>否</td><td>助手消息所属运行 ID</td></tr><tr><td>status</td><td>RunStatus</td><td>否</td><td>助手运行状态</td></tr><tr><td>redacted</td><td>boolean</td><td>否</td><td>已撤权隐藏标记</td></tr></tbody></table></section><section class="schema"><h3>ConversationDetailDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>conversation</td><td>ConversationDto</td><td>是</td><td>会话元数据</td></tr><tr><td>messages</td><td>MessageDto[]</td><td>是</td><td>按创建时间排列的消息</td></tr></tbody></table></section><section class="schema"><h3>ChatRunDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>生成任务 ID</td></tr><tr><td>conversationId</td><td>string</td><td>是</td><td>会话 ID</td></tr><tr><td>userMessageId</td><td>string</td><td>是</td><td>问题消息 ID</td></tr><tr><td>assistantMessageId</td><td>string</td><td>是</td><td>回答消息 ID</td></tr><tr><td>status</td><td>RunStatus</td><td>是</td><td>运行状态</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table></section><section class="schema"><h3>ImportJobDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>导入任务 ID</td></tr><tr><td>documentId</td><td>string | null</td><td>是</td><td>成功后生成的草稿 ID</td></tr><tr><td>fileName</td><td>string</td><td>是</td><td>上传文件名</td></tr><tr><td>status</td><td>JobStatus</td><td>是</td><td>导入状态</td></tr><tr><td>error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table></section><section class="schema"><h3>PublishJobDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>发布任务 ID</td></tr><tr><td>documentId</td><td>string</td><td>是</td><td>目标文档 ID</td></tr><tr><td>expectedDraftRevision</td><td>number</td><td>是</td><td>发布时锁定的草稿修订号</td></tr><tr><td>status</td><td>JobStatus</td><td>是</td><td>发布状态</td></tr><tr><td>error</td><td>string</td><td>否</td><td>失败原因</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>创建时间</td></tr></tbody></table></section><section class="schema"><h3>RetrievalConfigDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>ftsTopK</td><td>number</td><td>是</td><td>FTS 授权候选 Top-K</td></tr><tr><td>vectorTopK</td><td>number</td><td>是</td><td>向量授权候选 Top-K</td></tr><tr><td>finalTopK</td><td>number</td><td>是</td><td>最终证据 Top-K</td></tr><tr><td>rrfK</td><td>number</td><td>是</td><td>RRF 分母常数</td></tr><tr><td>ftsWeight</td><td>number</td><td>是</td><td>FTS 融合权重</td></tr><tr><td>vectorWeight</td><td>number</td><td>是</td><td>向量融合权重</td></tr><tr><td>rerankEnabled</td><td>boolean</td><td>是</td><td>是否重排</td></tr><tr><td>rerankTopK</td><td>number</td><td>是</td><td>重排候选数</td></tr><tr><td>ftsMinScore</td><td>number</td><td>是</td><td>FTS 专属最低相关性分</td></tr><tr><td>vectorMinSimilarity</td><td>number</td><td>是</td><td>向量专属最低相似度</td></tr><tr><td>rerankMinScore</td><td>number</td><td>是</td><td>重排专属最低分</td></tr><tr><td>minEvidenceCount</td><td>number</td><td>是</td><td>最少有效证据数</td></tr><tr><td>coverageCheckEnabled</td><td>boolean</td><td>是</td><td>是否判断问题事实覆盖</td></tr></tbody></table></section><section class="schema"><h3>StrategyDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>正式策略 ID</td></tr><tr><td>name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>config</td><td>RetrievalConfigDto</td><td>是</td><td>已启用配置</td></tr><tr><td>activatedAt</td><td>ISO 8601</td><td>是</td><td>启用时间</td></tr></tbody></table></section><section class="schema"><h3>CandidateDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>documentId</td><td>string</td><td>是</td><td>候选文档 ID</td></tr><tr><td>title</td><td>string</td><td>是</td><td>当前标题</td></tr><tr><td>versionId</td><td>string</td><td>是</td><td>候选版本 ID</td></tr><tr><td>excerpt</td><td>string</td><td>是</td><td>片段</td></tr><tr><td>score</td><td>number</td><td>是</td><td>本路分数，跨路不可直接比较</td></tr><tr><td>rank</td><td>number</td><td>是</td><td>本路排名</td></tr><tr><td>lane</td><td>FTS | VECTOR | FUSED | RERANK</td><td>是</td><td>所属阶段</td></tr></tbody></table></section><section class="schema"><h3>DebugResultDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td>string</td><td>是</td><td>调试问题</td></tr><tr><td>fts</td><td>CandidateDto[]</td><td>是</td><td>FTS 候选</td></tr><tr><td>vector</td><td>CandidateDto[]</td><td>是</td><td>向量候选</td></tr><tr><td>fused</td><td>CandidateDto[]</td><td>是</td><td>RRF 融合排名</td></tr><tr><td>reranked</td><td>CandidateDto[]</td><td>是</td><td>重排排名</td></tr><tr><td>evidence</td><td>CitationDto[]</td><td>是</td><td>有效证据</td></tr><tr><td>degradedLane</td><td>FTS | VECTOR</td><td>否</td><td>失败并被降级的链路</td></tr><tr><td>sufficient</td><td>boolean</td><td>是</td><td>证据是否充分</td></tr><tr><td>answerPreview</td><td>string</td><td>是</td><td>回答预览或固定弃答文本</td></tr><tr><td>timingsMs</td><td>object</td><td>是</td><td>fts/vector/fusion/rerank/total 阶段耗时</td></tr></tbody></table></section><section class="schema"><h3>EvaluationCaseDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>标注样本 ID</td></tr><tr><td>query</td><td>string</td><td>是</td><td>问题</td></tr><tr><td>relevance</td><td>Record&lt;documentId,0|1|2|3&gt;</td><td>是</td><td>文档级相关性标注</td></tr></tbody></table></section><section class="schema"><h3>EvaluationDatasetDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>数据集 ID</td></tr><tr><td>name</td><td>string</td><td>是</td><td>名称</td></tr><tr><td>description</td><td>string</td><td>是</td><td>说明</td></tr><tr><td>cases</td><td>EvaluationCaseDto[]</td><td>是</td><td>标注样本</td></tr></tbody></table></section><section class="schema"><h3>EvaluationSnapshotDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>冻结快照 ID</td></tr><tr><td>datasetId</td><td>string</td><td>是</td><td>数据集 ID</td></tr><tr><td>documentVersions</td><td>Record&lt;documentId,versionId&gt;</td><td>是</td><td>冻结的全部已发布文档版本</td></tr><tr><td>cases</td><td>EvaluationCaseDto[]</td><td>是</td><td>冻结标注</td></tr><tr><td>corpusFingerprint</td><td>string</td><td>是</td><td>切片、索引及语料指纹</td></tr><tr><td>permissionFingerprint</td><td>string</td><td>是</td><td>角色可见范围策略指纹</td></tr><tr><td>datasetFingerprint</td><td>string</td><td>是</td><td>标注指纹</td></tr><tr><td>modelFingerprint</td><td>string</td><td>是</td><td>嵌入/重排模型指纹</td></tr><tr><td>environmentFingerprint</td><td>string</td><td>是</td><td>运行环境指纹</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>冻结时间</td></tr><tr><td>status</td><td>VALID | INVALIDATED</td><td>是</td><td>快照有效状态</td></tr></tbody></table></section><section class="schema"><h3>EvaluationRunDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>id</td><td>string</td><td>是</td><td>评测运行 ID</td></tr><tr><td>snapshotId</td><td>string</td><td>是</td><td>共用快照 ID</td></tr><tr><td>name</td><td>string</td><td>是</td><td>实验名</td></tr><tr><td>config</td><td>RetrievalConfigDto</td><td>是</td><td>本次冻结参数</td></tr><tr><td>status</td><td>JobStatus</td><td>是</td><td>运行状态</td></tr><tr><td>metrics</td><td>object</td><td>是</td><td>recallAtK/mrr/ndcg/p50Ms/p95Ms</td></tr><tr><td>results</td><td>object[]</td><td>是</td><td>caseId/query/rankedDocumentIds/totalMs</td></tr><tr><td>createdAt</td><td>ISO 8601</td><td>是</td><td>启动时间</td></tr><tr><td>redacted</td><td>boolean</td><td>否</td><td>读取时因当前权限撤销而隐藏明细</td></tr></tbody></table></section><section class="schema"><h3>ResultDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>成功为 200；失败时与 HTTP 状态码相同</td></tr><tr><td>data</td><td>T | null</td><td>是</td><td>业务 DTO 或数组；失败时为 null</td></tr><tr><td>message</td><td>string | null</td><td>是</td><td>操作反馈；无反馈时为 null 或空字符串</td></tr><tr><td>token</td><td>string</td><td>否</td><td>仅登录成功时返回；后续请求置于 Authorization 请求头</td></tr></tbody></table></section><section class="schema"><h3>ErrorDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>code</td><td>number</td><td>是</td><td>与 HTTP 状态一致的错误状态码</td></tr><tr><td>data</td><td>null</td><td>是</td><td>失败时为 null</td></tr><tr><td>message</td><td>string</td><td>是</td><td>可展示错误信息</td></tr></tbody></table></section><section class="schema"><h3>InternalCandidateDto</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>documentId</td><td>string</td><td>是</td><td>授权文档 ID</td></tr><tr><td>versionId</td><td>string</td><td>是</td><td>当前或实验冻结版本</td></tr><tr><td>chunkId</td><td>string</td><td>是</td><td>切片 ID</td></tr><tr><td>title</td><td>string</td><td>是</td><td>标题</td></tr><tr><td>excerpt</td><td>string</td><td>是</td><td>片段文本</td></tr><tr><td>score</td><td>number</td><td>是</td><td>仅对本路有意义的分数</td></tr><tr><td>rank</td><td>number</td><td>是</td><td>本路名次</td></tr></tbody></table></section><section class="schema"><h3>InternalSearchResult</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>candidates</td><td>InternalCandidateDto[]</td><td>是</td><td>已经完成权限过滤的候选</td></tr><tr><td>timingMs</td><td>number</td><td>是</td><td>Java 授权和查询耗时</td></tr></tbody></table></section><section class="schema"><h3>InternalExtractResult</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>text</td><td>string</td><td>是</td><td>PDF 提取文本</td></tr><tr><td>metadata</td><td>object</td><td>是</td><td>页数等元数据</td></tr><tr><td>warnings</td><td>string[]</td><td>是</td><td>解析警告</td></tr></tbody></table></section><section class="schema"><h3>InternalIndexResult</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>chunks</td><td>object[]</td><td>是</td><td>ordinal/content/searchText/embedding；由 Java 验证并写入</td></tr></tbody></table></section><section class="schema"><h3>InternalCancelResult</h3><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>accepted</td><td>boolean</td><td>是</td><td>仅表示收到取消信号，不保证模型已停</td></tr></tbody></table></section><section class="group" id="rules"><h2>HTTP 状态码与关键业务规则</h2><table><thead><tr><th>HTTP 状态 = Result.code</th><th>场景</th><th>说明</th></tr></thead><tbody><tr><td>400</td><td>参数或导入格式无效</td><td>校验失败</td></tr><tr><td>401</td><td>未登录或会话过期</td><td>需要重新登录</td></tr><tr><td>403</td><td>权限不足</td><td>角色、文档或会话权限不足</td></tr><tr><td>404</td><td>资源不存在</td><td>也可用于隐藏资源存在性</td></tr><tr><td>409</td><td>状态冲突</td><td>修订号或快照冲突</td></tr><tr><td>500</td><td>服务内部错误</td><td>请求未完成</td></tr><tr><td>503</td><td>依赖服务不可用</td><td>必须拒绝或按规则降级</td></tr><tr><td>200</td><td>证据不足</td><td>请求成功，但返回固定弃答文本</td></tr></tbody></table></section><section class="rule"><h3>统一响应</h3><p>Java 对外普通 JSON 接口成功时返回 HTTP 200 和 Result.code=200；失败时 HTTP 状态码与 Result.code 使用相同数字（如 HTTP 401 对应 code=401），响应体为 {code,data:null,message}。code 是数字状态码，message 提供用户可读提示。成功但无响应体的操作（如退出登录、删除会话）返回 HTTP 204，不返回 Result。PDF 原件和 SSE 成功响应使用各自格式；这些接口发生错误时仍返回 JSON Result，且 HTTP 状态与 code 一致。Python 服务的 JSON 响应不使用 Java Result。</p></section><section class="rule"><h3>密码与登录态</h3><p>本地管理员测试数据使用 BCrypt 哈希后写入 users.password_hash；未来创建用户时也须使用同一方案。登录时按邮箱查账号并用 BCrypt.verify 校验，不能再次 hash 后比较字符串。登录成功生成高熵随机 Token，Redis 的 login:token:{token} 只存 userId，TTL 为 30 分钟；请求携带 Authorization: &lt;登录 Token&gt;。恢复拦截器查 Redis、确认数据库账号仍启用并刷新 TTL；登录拦截器拒绝未登录业务请求。公开登录页面由前端路由提供，POST /auth/login 放行。请求完成清理 ThreadLocal，退出登录删除 Redis 键。管理员接口还要校验 ADMIN，资源接口还要校验归属和当前权限。</p></section><section class="rule"><h3>授权候选检索</h3><p>读者的检索范围为全部已发布文档；管理员可查看草稿并管理全部内容。FTS 与 pgvector 两路 SQL 均须先限定 active_version_id 有效的已发布文档，再排序并截取 Top-K。禁止取全局固定 Top-K 后过滤。权限服务故障直接返回 HTTP 503 / code 503。</p></section><section class="rule"><h3>降级与弃答</h3><p>仅单路召回故障且另一条链路授权成功、达到该路独立阈值、最少有效证据数与启用的覆盖判断时降级。FTS、向量、重排分数不能共用阈值；证据不足返回“知识库中没有足够的信息。”，不调用生成模型补全内部知识。</p></section><section class="rule"><h3>版本与撤权</h3><p>文档新版本索引成功后，Java 原子切换 active_version_id。失败保留旧版，并拒绝同文档并发发布。下架或切换生效版本后，在线浏览、检索、PDF 和引用立即按新生效版本处理；历史回答中不再可访问的引用应隐藏，用户问题和审计保留。</p></section><section class="rule"><h3>实验快照</h3><p>快照冻结已发布文档版本、切片/索引及语料指纹、数据集标注、模型环境；每次运行冻结全部检索参数与逐查询结果。运行中语料或标注变化可使快照失效；读取结果再次校验可访问的发布版本，在线检索不能用实验快照绕过发布状态。</p></section><section class="rule"><h3>SSE 与取消</h3><p>每个事件都带 eventId、runId、conversationId、messageId、createdAt、type；SSE id 等于 eventId。取消经过 RUNNING → CANCEL_REQUESTED → CANCELLED；Java 保存已产生文本并通知 Python 协作停止。若先完成则保持 COMPLETED；前端轮询运行状态确认终态。</p></section><section class="rule"><h3>内部信任边界</h3><p>Python 不接收用户 ID、角色或 Cookie，只持有短期随机 scopeToken。Java 每次检索均校验 scopeToken 与发布状态；内部服务凭据与 scopeToken 都必须验证。</p></section><section class="rule"><h3>状态枚举与 Mock</h3><p>RunStatus：RUNNING、CANCEL_REQUESTED、CANCELLED、COMPLETED、FAILED。JobStatus：PENDING、RUNNING、SUCCEEDED、FAILED、INVALIDATED。Mock 场景切换和重置不是 HTTP 接口。</p></section><footer>GuguWiki · 41 个接口 · 与 frontend/src/api/http.ts 对齐</footer></main></div></body></html>
