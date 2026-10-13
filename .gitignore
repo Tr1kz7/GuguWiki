@@ -10,3 +10,9 @@ coverage/
 *.tsbuildinfo
 .local-backups/
 .idea/
+
+# Only track these three documents in docs; keep other files local.
+/docs/*
+!/docs/接口文档.md
+!/docs/数据库表设计.md
+!/docs/项目书.md
