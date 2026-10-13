@@ -24,6 +24,7 @@ public class AuthController {
     public ResponseEntity<Result> login(@RequestBody User user){
         return authService.login(user);
     }
+
     /**
     * 刷新页面重载用户信息
     * */

@@ -5,6 +5,9 @@ import com.tr1kz7.DTO.UserDTO;
 import com.tr1kz7.entity.NewUser;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * 管理员管理用户
+ * */
 public interface AdminService {
     //管理员创建用户
     ResponseEntity<Result> createUser(NewUser newUser);

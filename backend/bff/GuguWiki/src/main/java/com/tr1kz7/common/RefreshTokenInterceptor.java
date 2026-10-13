@@ -32,7 +32,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         //拿到redis中的登陆凭证
         String key = RedisConstants.LOGIN_TOKEN + token;
         String userId = redis.opsForValue().get(key);
-        //为登录用户放行
+        //未登录用户放行
         if (userId == null)
             return true;
         //拿到登陆用户信息

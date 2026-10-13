@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 把切面拒绝访问的异常转换成接口约定的 JSON 响应。 */
+/**
+ * 把切面拒绝访问的异常转换成接口约定的 JSON 响应。
+ * */
 @RestControllerAdvice
 public class AuthorizationExceptionHandler {
 

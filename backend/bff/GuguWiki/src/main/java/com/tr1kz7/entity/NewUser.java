@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 管理员创建用户接收参数
+ * 用来接收管理员创建的用户
  */
-
 @Getter
 @Setter
 public class NewUser {

@@ -18,7 +18,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
-/** 登录校验与 Redis 登录态。 */
 @Service
 public class AuthServiceImpl implements AuthService {
 

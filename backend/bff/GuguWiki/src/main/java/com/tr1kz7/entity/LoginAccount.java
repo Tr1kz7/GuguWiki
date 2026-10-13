@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 /**
- * 存储数据库查出的用户信息，便于比较登陆密码和hash密码结果
+ * 接收存储数据库查出的用户信息，便于比较登陆密码和hash密码结果
  * */
 @Data
 public class LoginAccount {

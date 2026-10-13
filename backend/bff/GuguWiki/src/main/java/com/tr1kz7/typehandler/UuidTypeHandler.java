@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-/** PostgreSQL UUID 与 Java UUID 之间的 MyBatis 映射。 */
+/**
+ * PostgreSQL UUID 与 Java UUID 之间的 MyBatis 映射规则
+ * */
 @MappedTypes(UUID.class)
 @MappedJdbcTypes(value = JdbcType.OTHER, includeNullJdbcType = true)
 public class UuidTypeHandler extends BaseTypeHandler<UUID> {

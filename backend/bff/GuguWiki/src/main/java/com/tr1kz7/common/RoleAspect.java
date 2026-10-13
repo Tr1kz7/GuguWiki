@@ -5,7 +5,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
-/** 在进入标注的控制器方法前检查当前用户角色。 */
+/**
+ * 在进入标注的控制器方法前检查当前用户角色。
+ * */
 @Aspect
 @Component
 public class RoleAspect {

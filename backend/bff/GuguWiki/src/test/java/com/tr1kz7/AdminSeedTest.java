@@ -13,7 +13,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** 手动运行一次，为本地开发数据库创建首个管理员。普通测试不会执行。 */
+/**
+ * 手动运行一次，为本地开发数据库创建首个管理员。普通测试不会执行。
+ * */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @EnabledIfEnvironmentVariable(named = "GUGUWIKI_SEED_ADMIN", matches = "true")
 class AdminSeedTest {

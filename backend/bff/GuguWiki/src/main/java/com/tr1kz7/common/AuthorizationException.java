@@ -1,5 +1,8 @@
 package com.tr1kz7.common;
 
+/**
+* 接收切面注入出现的异常
+* */
 public class AuthorizationException extends RuntimeException {
     private final int status;
 

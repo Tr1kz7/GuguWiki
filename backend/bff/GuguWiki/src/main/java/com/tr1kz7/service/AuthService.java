@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 public interface AuthService {
     //登录功能
     ResponseEntity<Result> login(User user);
+    //刷新页面重载用户信息
     ResponseEntity<Result> me();
+    //登出功能
     ResponseEntity<Void> logout(String token);
 }
